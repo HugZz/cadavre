@@ -3,3 +3,7 @@
 
 # Ignore object files
 *.o
+
+# Ignore executables
+server/cadavre-server
+client/cadavre
