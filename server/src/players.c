@@ -12,7 +12,29 @@
 
 #include "../headers/players.h"
 
+/* Add a player to the player list */
 void add_player(struct sockaddr_in player_addr, int player_sock)
 {
-    NULL;
+    ListPlayers index = players;
+
+    // If there are no players yet.
+    if (players == NULL)
+    {
+        players = (ListPlayers) malloc(sizeof(*players));
+        players->player_addr = player_addr;
+        players->player_sock = player_sock;
+        players->next_player = NULL;
+    }
+    else
+    {
+        while (index->next_player != NULL)
+        {
+            index = index->next_player;
+        }
+        index->next_player = (ListPlayers) malloc(sizeof(*players));
+        index = index->next_player;
+        index->player_addr = player_addr;
+        index->player_sock = player_sock;
+        index->next_player = NULL;
+    }
 }
