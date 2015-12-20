@@ -15,6 +15,7 @@
 
 #include "../headers/error.h"
 #include "../headers/players.h"
+#include "../headers/game.h"
 
 /* Extern global variable to count player number */
 int nb_players = 0;
@@ -28,9 +29,12 @@ int main(int argc, char *argv[])
     unsigned int clilen;
     struct sockaddr_in serv_addr, cli_addr;
     char c;
-    //char buffer[256];
+    int round = 0;
     /* Return value for write and read */
     int n;
+    /* Array of strings to store the lines */
+    char **lines = NULL;
+    int i = 0;
 
     if (argc < 2)
     {
@@ -81,10 +85,10 @@ int main(int argc, char *argv[])
             /* We can accept the new player, so we add him
              * to the player linked list, letting him know.
              */
+            nb_players++;
             n = write(newsockfd, "YES", 4);
             if (n < 0) error("ERROR writing to socket");
             add_player(cli_addr, newsockfd);
-            nb_players++;
         }
         else
         {
@@ -103,7 +107,38 @@ int main(int argc, char *argv[])
         }
     }
 
+    /* 2D array of strings with NB_ROUNDS * nb_players lines
+     * and MAX_BUFFER columns, allocated dynamicly.
+     */
+    lines = (char **) calloc(NB_ROUNDS * nb_players, sizeof(*lines));
+    *lines = (char *) calloc(NB_ROUNDS * nb_players * MAX_BUFFER, sizeof(**lines));
+    for(i = 1; i < NB_ROUNDS * nb_players; i++)
+    {
+        lines[i] = lines[i - 1] + MAX_BUFFER;
+    }
+
     /* Game part, everybody is connected */
+
+    /* Announce the beginning of the game */
+    check_game();
+
+    while(round < NB_ROUNDS)
+    {
+        /* Check if everybody is here and announce the round */
+        check_round(round);
+        /* Play the round */
+        play_round(lines, round);
+        round++;
+    }
+
+    /* Announce end of game and send the cadavre, exit */
+    print_lines(lines);
+
+    /*Print the lines on server's terminal */
+    for(i = 0; i < NB_ROUNDS * nb_players; i++)
+    {
+        printf("%s", lines[i]);
+    }
 
     return EXIT_SUCCESS;
 }

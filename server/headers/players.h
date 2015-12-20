@@ -11,6 +11,8 @@ struct Player
     struct sockaddr_in player_addr;
     // The socket for that connection
     int player_sock;
+    // Number of the player
+    int player_number;
     struct Player *next_player;
 };
 typedef struct Player Player;

@@ -16,6 +16,8 @@
 void add_player(struct sockaddr_in player_addr, int player_sock)
 {
     ListPlayers index = players;
+    // Number of the player.
+    int number = 0;
 
     // If there are no players yet.
     if (players == NULL)
@@ -23,6 +25,7 @@ void add_player(struct sockaddr_in player_addr, int player_sock)
         players = (ListPlayers) malloc(sizeof(*players));
         players->player_addr = player_addr;
         players->player_sock = player_sock;
+        players->player_number = number;
         players->next_player = NULL;
     }
     else
@@ -30,11 +33,14 @@ void add_player(struct sockaddr_in player_addr, int player_sock)
         while (index->next_player != NULL)
         {
             index = index->next_player;
+            number++;
         }
+        number++;
         index->next_player = (ListPlayers) malloc(sizeof(*players));
         index = index->next_player;
         index->player_addr = player_addr;
         index->player_sock = player_sock;
+        index->player_number = number;
         index->next_player = NULL;
     }
 }
