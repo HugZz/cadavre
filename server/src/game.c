@@ -34,5 +34,6 @@ void print_lines(char **lines)
 
 void check_game(void)
 {
-    NULL;
+    printf("test game : ");
+    getchar();
 }

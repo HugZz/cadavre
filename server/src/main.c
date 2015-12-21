@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
     if (argc < 2)
     {
-        fprintf(stderr, "usage : ./cadavre-server PORT_NUMBER\n");
+        fprintf(stderr, "usage: %s PORT_NUMBER\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 

@@ -10,3 +10,4 @@
 void check_round(int round);
 void play_round(char **lines, int round);
 void print_lines(char **lines);
+void check_game(void);
