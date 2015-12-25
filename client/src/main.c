@@ -12,8 +12,10 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <string.h>
+#include <netdb.h>
 
 #include "../headers/error.h"
+#include "../headers/game.h"
 
 int main(int argc, char *argv[])
 {
@@ -22,6 +24,13 @@ int main(int argc, char *argv[])
     int n; // Value of bytes written/read
     struct sockaddr_in serv_addr; // Address of the server.
     struct hostent *server; // Domain name of the server.
+    char buffer[MAX_BUFFER];
+    /* 2 characters information string */
+    char info[3];
+    /* Number of players */
+    int nb_players = 0;
+    /* Number of this player */
+    int number = 0;
 
     /* Check arguments */
     if (argc < 3) 
@@ -43,6 +52,56 @@ int main(int argc, char *argv[])
     {
         error("ERROR, no such host");
     }
+
+    /* Fill the fields of server address */
+    bzero((char *) &serv_addr, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    bcopy((char *) server->h_addr, (char *) &serv_addr.sin_addr.s_addr, server->h_length);
+    serv_addr.sin_port = htons(portno);
+
+    /* Connect to the server */
+    if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) 
+    {
+        error("ERROR connecting");
+    }
+    /* Server answer */
+    bzero(buffer, MAX_BUFFER);
+    while (strcmp(buffer, "YES") != 0 && strcmp(buffer, "NO") != 0)
+    {
+        bzero(buffer, MAX_BUFFER);
+        n = read(sockfd, buffer, MAX_BUFFER - 1);
+        if (n < 0)
+        {
+            error("ERROR reading from socket");
+        }
+    }
+    if (strcmp(buffer, "YES") == 0)
+    {
+        printf("You have been accepted, waiting for other players.\n");
+    }
+    if (strcmp(buffer, "NO") == 0)
+    {
+        printf("You have been kicked by the server.\n");
+        return EXIT_FAILURE;
+    }
+
+    /* Check game starting */
+    bzero(buffer, MAX_BUFFER);
+    bzero(info, 3);
+    while (strcmp(info, "OK") != 0)
+    {
+        bzero(buffer, MAX_BUFFER);
+        bzero(info, 3);
+        n = read(sockfd, buffer, MAX_BUFFER - 1);
+        if (n < 0)
+        {
+            error("ERROR reading from socket");
+        }
+        sscanf(buffer, "%s %d %d", info, &number, &nb_players);
+        printf("TEST : |%s|\n", info);
+    }
+
+    printf("Game starting: you are player %d/%d.\n", number, nb_players);
 
 
 

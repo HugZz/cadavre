@@ -19,6 +19,7 @@ typedef struct Player Player;
 typedef Player* ListPlayers;
 
 extern ListPlayers players;
+extern ListPlayers players_last;
 extern int nb_players;
 
 void add_player(struct sockaddr_in player_addr, int player_sock);

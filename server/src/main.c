@@ -21,6 +21,8 @@
 int nb_players = 0;
 /* The main player list */
 ListPlayers players = NULL;
+/* Last player in the list */
+ListPlayers players_last = NULL;
 
 int main(int argc, char *argv[])
 {
@@ -78,9 +80,11 @@ int main(int argc, char *argv[])
             error("ERROR on accept");
         }
 
-        printf("Accept player from %s ? (y/n) ", inet_ntoa(cli_addr.sin_addr));
+        printf("Accept player from %s ? (y/N) ", inet_ntoa(cli_addr.sin_addr));
         c = getchar();
-        if (c == 'y')
+        /* Remove `\n` */
+        getchar();
+        if (c == 'y' || c == 'Y')
         {
             /* We can accept the new player, so we add him
              * to the player linked list, letting him know.
@@ -93,6 +97,7 @@ int main(int argc, char *argv[])
         else
         {
             /* Refuse player */
+            printf("Joueur refusé.\n");
             n = write(newsockfd, "NO", 3);
             if (n < 0) error("ERROR writing to socket");
             close(newsockfd);
@@ -101,8 +106,9 @@ int main(int argc, char *argv[])
         /* If the game is playable */
         if (nb_players > 2)
         {
-            printf("Number of players : %d\nStart the game ? (y/n)", nb_players);
+            printf("Number of players : %d\nStart the game ? (y/n) ", nb_players);
             c = getchar();
+            getchar();
             if (c == 'y') break;
         }
     }

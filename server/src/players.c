@@ -17,7 +17,7 @@ void add_player(struct sockaddr_in player_addr, int player_sock)
 {
     ListPlayers index = players;
     // Number of the player.
-    int number = 0;
+    int number = 1;
 
     // If there are no players yet.
     if (players == NULL)
@@ -26,11 +26,13 @@ void add_player(struct sockaddr_in player_addr, int player_sock)
         players->player_addr = player_addr;
         players->player_sock = player_sock;
         players->player_number = number;
-        players->next_player = NULL;
+        // Round Linked List
+        players->next_player = players;
+        players_last = players;
     }
     else
     {
-        while (index->next_player != NULL)
+        while (index != players_last)
         {
             index = index->next_player;
             number++;
@@ -41,6 +43,8 @@ void add_player(struct sockaddr_in player_addr, int player_sock)
         index->player_addr = player_addr;
         index->player_sock = player_sock;
         index->player_number = number;
-        index->next_player = NULL;
+        // The last element is linked to the first.
+        index->next_player = players;
+        players_last = index;
     }
 }
