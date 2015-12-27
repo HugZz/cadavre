@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
     }
 
     /* Announce end of game and send the cadavre, exit */
-    print_lines(lines);
+    send_lines(lines);
 
     /*Print the lines on server's terminal */
     for(i = 0; i < NB_ROUNDS * nb_players; i++)

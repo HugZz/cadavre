@@ -39,10 +39,94 @@ void check_round(int round)
 
 void play_round(char **lines, int round)
 {
-    getchar();
+    ListPlayers index = players;
+    ListPlayers current_player = players;
+    char buffer[MAX_BUFFER];
+    char info[3];
+    int n;
+    int length = 0;
+
+    /* Browse all players */
+    do
+    {
+        /* Tell them if it is their turn or not */
+        do
+        {
+            if (index == current_player)
+            {
+                sprintf(buffer, "GO");
+            }
+            else
+            {
+                sprintf(buffer, "WT %d", current_player->player_number);
+            }
+            /* Length of the string + '\0' */
+            length = strlen(buffer) + 1;
+            n = write(index->player_sock, buffer, length);
+            if (n < 0) error("ERROR writing to socket");
+            index = index->next_player;
+        }
+        while (index != players);
+
+        /* Communicate with current player to play */
+
+        /* Send him previous line which is:
+         * line of the last player of the last round for the first player
+         * line of the last player for the others
+         */
+
+        /* First player, first round */
+        if (round == 1 && current_player->player_number == 1)
+        {
+            sprintf(buffer, "FL");
+        }
+        else
+        {
+            if (current_player->player_number == 1)
+            {
+                sprintf(buffer, "LN %s", lines[round - 2 + nb_players - 1]);
+            }
+            else
+            {
+                sprintf(buffer, "LN %s", lines[round - 1 + current_player->player_number - 2]);
+            }
+        }
+        /* Length of the string + '\0' */
+        length = strlen(buffer) + 1;
+        n = write(index->player_sock, buffer, length);
+        if (n < 0) error("ERROR writing to socket");
+
+        /* Get his line and store it */
+        bzero(buffer, MAX_BUFFER);
+        bzero(info, 3);
+        while (strcmp(info, "LN") != 0)
+        {
+            n = read(index->player_sock, buffer, MAX_BUFFER - 1);
+            if (n < 0)
+            {
+                error("ERROR reading from socket");
+            }
+            sscanf(buffer, "%s", info);
+        }
+        sscanf(buffer, "%s %s", info, lines[round - 1 + current_player->player_number - 1]);
+
+        /* Indicate the well reception of data and the end of player's turn */
+        index = players;
+        do
+        {
+            sprintf(buffer, "END");
+            /* Length of the string + '\0' */
+            length = strlen(buffer) + 1;
+            n = write(index->player_sock, buffer, length);
+            if (n < 0) error("ERROR writing to socket");
+            index = index->next_player;
+        }
+        while (index != players);
+    }
+    while (current_player != players);
 }
 
-void print_lines(char **lines)
+void send_lines(char **lines)
 {
     NULL;
 }

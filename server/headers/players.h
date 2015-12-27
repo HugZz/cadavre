@@ -4,6 +4,9 @@
  * Constants and prototypes for players
  */
 
+#ifndef _PLAYERS_
+#define _PLAYERS_
+
 /* Structure of a player in our list */
 struct Player
 {
@@ -23,3 +26,5 @@ extern ListPlayers players_last;
 extern int nb_players;
 
 void add_player(struct sockaddr_in player_addr, int player_sock);
+
+#endif
