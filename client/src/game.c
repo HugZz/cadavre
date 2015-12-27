@@ -39,7 +39,7 @@ void play_round(int sockfd)
         }
         sscanf(buffer, "%s", info);
     }
-    if (strcmp(info, "FL") != 0)
+    if (strcmp(info, "FL") == 0)
     {
         printf("First line of the game.\n");
     }

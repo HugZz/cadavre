@@ -93,7 +93,7 @@ void play_round(char **lines, int round)
         }
         /* Length of the string + '\0' */
         length = strlen(buffer) + 1;
-        n = write(index->player_sock, buffer, length);
+        n = write(current_player->player_sock, buffer, length);
         if (n < 0) error("ERROR writing to socket");
 
         /* Get his line and store it */
@@ -101,7 +101,7 @@ void play_round(char **lines, int round)
         bzero(info, 3);
         while (strcmp(info, "LN") != 0)
         {
-            n = read(index->player_sock, buffer, MAX_BUFFER - 1);
+            n = read(current_player->player_sock, buffer, MAX_BUFFER - 1);
             if (n < 0)
             {
                 error("ERROR reading from socket");
@@ -122,6 +122,8 @@ void play_round(char **lines, int round)
             index = index->next_player;
         }
         while (index != players);
+
+        current_player = current_player->next_player;
     }
     while (current_player != players);
 }

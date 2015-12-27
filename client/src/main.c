@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
                 sscanf(buffer, "%s %d", info, &player);
                 printf("Player %d is playing ...\n", player);
             }
-            else if (strcmp(info, "GO") == 0)
+            else
             {
                 /* Play this round: send line to server */
                 play_round(sockfd);
