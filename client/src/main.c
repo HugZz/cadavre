@@ -31,6 +31,8 @@ int main(int argc, char *argv[])
     int nb_players = 0;
     /* Number of this player */
     int number = 0;
+    int round = 0;
+    int max_rounds = 0;
 
     /* Check arguments */
     if (argc < 3) 
@@ -66,6 +68,7 @@ int main(int argc, char *argv[])
     }
     /* Server answer */
     bzero(buffer, MAX_BUFFER);
+    printf("Connecting to the server ...\n");
     while (strcmp(buffer, "YES") != 0 && strcmp(buffer, "NO") != 0)
     {
         bzero(buffer, MAX_BUFFER);
@@ -98,10 +101,38 @@ int main(int argc, char *argv[])
             error("ERROR reading from socket");
         }
         sscanf(buffer, "%s %d %d", info, &number, &nb_players);
-        printf("TEST : |%s|\n", info);
     }
 
     printf("Game starting: you are player %d/%d.\n", number, nb_players);
+
+    /* Game loop */
+    bzero(buffer, MAX_BUFFER);
+    bzero(info, 3);
+
+    while (1)
+    {
+        /* Check beginning of round */
+        bzero(buffer, MAX_BUFFER);
+        bzero(info, 3);
+        while (strcmp(info, "RD") != 0)
+        {
+            //bzero(buffer, MAX_BUFFER);
+            //bzero(info, 3);
+            n = read(sockfd, buffer, MAX_BUFFER - 1);
+            if (n < 0)
+            {
+                error("ERROR reading from socket");
+            }
+            sscanf(buffer, "%s %d %d", info, &round, &max_rounds);
+        }
+        printf("ROUND %d/%d:\n", round, max_rounds);
+
+        bzero(buffer, MAX_BUFFER);
+        bzero(info, 3);
+
+        break;
+    }
+
 
 
 

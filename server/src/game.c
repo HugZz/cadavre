@@ -19,12 +19,27 @@
 
 void check_round(int round)
 {
-    NULL;
+    ListPlayers index = players;
+    char buffer[MAX_BUFFER];
+    int n;
+    int length = 0;
+
+    /* Browse all players */
+    do
+    {
+        sprintf(buffer, "RD %d %d", round, NB_ROUNDS);
+        /* Length of the string + '\0' */
+        length = strlen(buffer) + 1;
+        n = write(index->player_sock, buffer, length);
+        if (n < 0) error("ERROR writing to socket");
+        index = index->next_player;
+    }
+    while (index != players);
 }
 
 void play_round(char **lines, int round)
 {
-    NULL;
+    getchar();
 }
 
 void print_lines(char **lines)

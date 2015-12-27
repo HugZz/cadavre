@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     unsigned int clilen;
     struct sockaddr_in serv_addr, cli_addr;
     char c;
-    int round = 0;
+    int round = 1;
     /* Return value for write and read */
     int n;
     /* Array of strings to store the lines */
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
     /* Announce the beginning of the game */
     check_game();
 
-    while(round < NB_ROUNDS)
+    while(round <= NB_ROUNDS)
     {
         /* Check if everybody is here and announce the round */
         check_round(round);
