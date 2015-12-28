@@ -1,7 +1,7 @@
 /*
- * error.h
+ * File : error.h
+ * Description : Header file for the error functions.
  * Author : Hugues de Valon
- * Main file for the player-side program.
  */
 
 #ifndef _ERROR_

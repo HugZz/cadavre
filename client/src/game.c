@@ -1,7 +1,7 @@
 /*
- * game.c
+ * File : game.c
+ * Description : Function and constants to manage the gaming side.
  * Author : Hugues de Valon
- * Function and constants to manage the gaming side.
  */
 
 #include <stdio.h>
@@ -54,7 +54,10 @@ void play_round(int sockfd)
     /* Length of the string + '\0' */
     length = strlen(buffer) + 1;
     n = write(sockfd, buffer, length);
-    if (n < 0) error("ERROR writing to socket");
+    if (n < 0) 
+    {
+        error("ERROR writing to socket");
+    }
 }
 
 void print_lines(int sockfd, int nb_players, int max_rounds)

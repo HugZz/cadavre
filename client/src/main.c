@@ -1,7 +1,7 @@
 /* 
- * main.c
+ * File : main.c
+ * Description : Main file for the player-side program.
  * Author : Hugues de Valon
- * Main file for the player-side program.
  */
 
 #include <stdio.h>
@@ -33,7 +33,9 @@ int main(int argc, char *argv[])
     int nb_players = 0;
     /* Number of this player */
     int number = 0;
+    /* Number of the current round */
     int round = 0;
+    /* Number of total rounds sent by the server */
     int max_rounds = 0;
     /* Number of the current player */
     int player = 0;
@@ -82,7 +84,7 @@ int main(int argc, char *argv[])
     {
         printf("You have been accepted, waiting for other players.\n");
     }
-    if (strcmp(buffer, "NO") == 0)
+    else if (strcmp(buffer, "NO") == 0)
     {
         printf("You have been kicked by the server.\n");
         return EXIT_FAILURE;

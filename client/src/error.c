@@ -1,7 +1,7 @@
 /*
- * error.c
+ * File : error.c
+ * Description : Error function.
  * Author : Hugues de Valon
- * Error functions.
  */
 
 #include <stdlib.h>
