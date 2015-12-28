@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
     }
 
     /* Print the final lines */
-    print_lines(sockfd);
+    //print_lines(sockfd, nb_players, max_rounds);
 
     printf("End of game. Goodbye !\nMade by Hugues de Valon\n");
 

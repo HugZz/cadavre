@@ -130,7 +130,7 @@ void play_round(char **lines, int round)
         {
             error("ERROR reading from socket");
         }
-        sscanf(buffer, "%s %s", info, lines[round - 1 + current_player->player_number - 1]);
+        sscanf(buffer, "%s %s", info, lines[(round - 1) * nb_players + (current_player->player_number - 1)]);
 
         /* Send end of turn message */
         index = players;
@@ -162,7 +162,35 @@ void play_round(char **lines, int round)
 
 void send_lines(char **lines)
 {
-    NULL;
+    ListPlayers index = players;
+    char buffer[MAX_BUFFER];
+    char info[3];
+    int n = 0;
+    int i = 0;
+    int j = 0;
+    int length = 0;
+
+    /* Browse all players */
+    do
+    {
+        for(i = 0; i < NB_ROUNDS * nb_players; i++)
+        {
+            bzero(buffer, MAX_BUFFER);
+            bzero(info, 3);
+            n = read(index->player_sock, buffer, MAX_BUFFER);
+            if (n < 0)
+            {
+                error("ERROR reading from socket");
+            }
+            sscanf(buffer, "%s %2d", info, &j);
+
+            length = strlen(lines[j]) + 1;
+            n = write(index->player_sock, lines[j], length);
+            if (n < 0) error("ERROR writing to socket");
+            index = index->next_player;
+        }
+    }
+    while (index != players);
 }
 
 void check_game(void)

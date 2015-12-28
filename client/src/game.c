@@ -48,7 +48,7 @@ void play_round(int sockfd)
 
     /* Send the new line */
     printf("write: ");
-    scanf("%s", new);
+    fgets(new, MAX_BUFFER - 3, stdin);
     bzero(buffer, MAX_BUFFER);
     sprintf(buffer, "LN %s", new);
     /* Length of the string + '\0' */
@@ -57,7 +57,26 @@ void play_round(int sockfd)
     if (n < 0) error("ERROR writing to socket");
 }
 
-void print_lines(int sockfd)
+void print_lines(int sockfd, int nb_players, int max_rounds)
 {
-    printf("Lines printing !\n");
+    char buffer[MAX_BUFFER];
+    int n = 0;
+    int i = 0;
+    int length = 0;
+
+    for(i = 0; i < max_rounds * nb_players; i++)
+    {
+        bzero(buffer, MAX_BUFFER);
+        sprintf(buffer, "GIV %2d", i);
+        length = strlen(buffer) + 1;
+        n = write(sockfd, buffer, length);
+        if (n < 0) error("ERROR writing to socket");
+        bzero(buffer, MAX_BUFFER);
+        n = read(sockfd, buffer, MAX_BUFFER);
+        if (n < 0)
+        {
+            error("ERROR reading from socket");
+        }
+        printf("%s\n", buffer);
+    }
 }

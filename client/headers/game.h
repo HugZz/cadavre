@@ -10,6 +10,6 @@
 #define MAX_BUFFER 256
 
 void play_round(int sockfd);
-void print_lines(int sockfd);
+void print_lines(int sockfd, int nb_players, int max_rounds);
 
 #endif
