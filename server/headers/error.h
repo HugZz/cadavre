@@ -1,7 +1,7 @@
 /*
- * error.h
+ * File : error.h
+ * Description : error.c header file
  * Author : Hugues de Valon
- * error.c header file
  */
 
 #ifndef _ERROR_

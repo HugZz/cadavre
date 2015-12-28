@@ -1,7 +1,7 @@
 /*
- * error.c
+ * File : error.c
+ * Description : Basic functions to handle errors.
  * Author : Hugues de Valon
- * Basic functions to handle errors.
  */
 
 #include <stdlib.h>

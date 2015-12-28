@@ -1,7 +1,7 @@
 /*
- * main.c
+ * File : main.c
+ * Description : Main file for the server-side program.
  * Author : Hugues de Valon
- * Main file for the server-side program.
  */
 
 #include <stdio.h>
@@ -26,7 +26,8 @@ ListPlayers players_last = NULL;
 
 int main(int argc, char *argv[])
 {
-    int sockfd, newsockfd; // Sockets for the server and new connections.
+    /* Sockets for the server and new connections. */
+    int sockfd, newsockfd; 
     int portno;
     unsigned int clilen;
     struct sockaddr_in serv_addr, cli_addr;

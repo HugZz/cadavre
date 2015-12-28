@@ -1,8 +1,7 @@
 /* 
- * players.c
+ * File : players.c
+ * Description : Implements players linked list and functions to manage it.
  * Author : Hugues de Valon
- * Implements players linked list and usefull functions
- * to manage it.
  */
 
 #include <stdlib.h>

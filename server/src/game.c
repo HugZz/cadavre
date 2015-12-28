@@ -1,7 +1,7 @@
 /*
- * game.c
+ * File : game.c
+ * Description : Function and constants to manage the gaming side.
  * Author : Hugues de Valon
- * Function and constants to manage the gaming side.
  */
 
 #include <stdio.h>
@@ -27,6 +27,7 @@ void check_round(int round)
     /* Browse all players */
     do
     {
+        /* Get the round number and the total round number */
         bzero(buffer, MAX_BUFFER);
         n = read(index->player_sock, buffer, MAX_BUFFER - 1);
         if (n < 0)

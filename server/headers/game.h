@@ -1,7 +1,7 @@
 /*
- * game.h
+ * File : game.h
+ * Description : Function and constants to manage the gaming side.
  * Author : Hugues de Valon
- * Function and constants to manage the gaming side.
  */
 
 #ifndef _GAME_
