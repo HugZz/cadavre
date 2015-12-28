@@ -74,7 +74,6 @@ int main(int argc, char *argv[])
     bzero(buffer, MAX_BUFFER);
     printf("Connecting to the server ...\n");
     n = read(sockfd, buffer, MAX_BUFFER - 1);
-    printf("n = %d\n", n);
     if (n < 0)
     {
         error("ERROR reading from socket");
@@ -107,6 +106,8 @@ int main(int argc, char *argv[])
         /* Check beginning of round */
         bzero(buffer, MAX_BUFFER);
         bzero(info, 3);
+        n = write(sockfd, "RD", 3);
+        if (n < 0) error("ERROR writing to socket");
         n = read(sockfd, buffer, MAX_BUFFER - 1);
         if (n < 0)
         {
@@ -119,24 +120,38 @@ int main(int argc, char *argv[])
         for (i = 0; i < nb_players; i++)
         {
             /* Check either it is this client turn or any other */
+            n = write(sockfd, "PL", 3);
+            if (n < 0) error("ERROR writing to socket");
             bzero(buffer, MAX_BUFFER);
             bzero(info, 3);
             n = read(sockfd, buffer, MAX_BUFFER - 1);
+            sscanf(buffer, "%s %d", info, &player);
             if (n < 0)
             {
                 error("ERROR reading from socket");
             }
-            sscanf(buffer, "%s", info);
-            }
             if (strcmp(info, "WT") == 0)
             {
-                sscanf(buffer, "%s %d", info, &player);
                 printf("Player %d is playing ...\n", player);
             }
             else if (strcmp(info, "GO") == 0)
             {
                 /* Play this round: send line to server */
+                printf("It's your turn to play.\n");
                 play_round(sockfd);
+            }
+
+            /* End of player's turn */
+            n = write(sockfd, "END", 4);
+            if (n < 0) 
+            {
+                error("ERROR writing to socket");
+            }
+            bzero(buffer, MAX_BUFFER);
+            n = read(sockfd, buffer, MAX_BUFFER - 1);
+            if (n < 0)
+            {
+                error("ERROR reading from socket");
             }
         }
 
