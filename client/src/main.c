@@ -21,11 +21,16 @@ int main(int argc, char *argv[])
 {
     /* Loop index */
     int i = 0;
-    int sockfd; // Socket for remote connection
-    int portno; // Port to connect with the server.
-    int n; // Value of bytes written/read
-    struct sockaddr_in serv_addr; // Address of the server.
-    struct hostent *server; // Domain name of the server.
+    /* Socket for remote connection */
+    int sockfd; 
+    /* Port to connect with the server. */
+    int portno;
+    /* Value of bytes written/read */
+    int n; 
+    /* Address of the server. */
+    struct sockaddr_in serv_addr; 
+    /* Domain name of the server. */
+    struct hostent *server; 
     char buffer[MAX_BUFFER];
     /* 2 characters information string */
     char info[3];
@@ -165,11 +170,15 @@ int main(int argc, char *argv[])
             break;
         }
     }
+    printf("End of game.\n\n");
+    printf("CADAVRE:\n");
 
     /* Print the final lines */
     print_lines(sockfd, nb_players, max_rounds);
 
-    printf("End of game. Goodbye !\nMade by Hugues de Valon\n");
+    printf("\n\nGoodbye !\nMade by Hugues de Valon\n");
+
+    close(sockfd);
 
     return EXIT_SUCCESS;
 }

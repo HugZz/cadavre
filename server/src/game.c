@@ -169,7 +169,7 @@ void send_lines(char **lines)
     /* Browse all players */
     do
     {
-        n = write(index->player_sock, lines, NB_ROUNDS * nb_players * MAX_BUFFER);
+        n = write(index->player_sock, *lines, NB_ROUNDS * nb_players * MAX_BUFFER);
         if (n < 0) 
         {
             error("ERROR writing to socket");

@@ -77,7 +77,7 @@ void print_lines(int sockfd, int nb_players, int max_rounds)
         lines[i] = lines[i - 1] + MAX_BUFFER;
     }
 
-    n = read(sockfd, lines, max_rounds * nb_players * MAX_BUFFER);
+    n = read(sockfd, *lines, max_rounds * nb_players * MAX_BUFFER);
     if (n < 0)
     {
         error("ERROR reading from socket");

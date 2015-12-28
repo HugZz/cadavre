@@ -145,6 +145,9 @@ int main(int argc, char *argv[])
         play_round(lines, round);
         round++;
     }
+    printf("End of game.\n");
+
+    printf("\t\nCADAVRE:\n");
 
     /* Announce end of game and send the cadavre, exit */
     send_lines(lines);
