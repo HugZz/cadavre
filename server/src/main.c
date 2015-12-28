@@ -130,6 +130,7 @@ int main(int argc, char *argv[])
 
     while(round <= NB_ROUNDS)
     {
+        printf("ROUND %d\n", round);
         /* Check if everybody is here and announce the round */
         check_round(round);
         /* Play the round */

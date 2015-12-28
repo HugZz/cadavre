@@ -61,6 +61,7 @@ void play_round(char **lines, int round)
     /* Browse all players */
     do
     {
+        printf("Player %d turn.\n", current_player->player_number);
         /* Tell them if it is their turn or not */
         do
         {
