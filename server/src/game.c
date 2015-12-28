@@ -27,6 +27,7 @@ void check_round(int round)
     /* Browse all players */
     do
     {
+        bzero(buffer, MAX_BUFFER);
         sprintf(buffer, "RD %d %d", round, NB_ROUNDS);
         /* Length of the string + '\0' */
         length = strlen(buffer) + 1;
@@ -99,29 +100,12 @@ void play_round(char **lines, int round)
         /* Get his line and store it */
         bzero(buffer, MAX_BUFFER);
         bzero(info, 3);
-        while (strcmp(info, "LN") != 0)
+        n = read(current_player->player_sock, buffer, MAX_BUFFER - 1);
+        if (n < 0)
         {
-            n = read(current_player->player_sock, buffer, MAX_BUFFER - 1);
-            if (n < 0)
-            {
-                error("ERROR reading from socket");
-            }
-            sscanf(buffer, "%s", info);
+            error("ERROR reading from socket");
         }
         sscanf(buffer, "%s %s", info, lines[round - 1 + current_player->player_number - 1]);
-
-        /* Indicate the well reception of data and the end of player's turn */
-        index = players;
-        do
-        {
-            sprintf(buffer, "END");
-            /* Length of the string + '\0' */
-            length = strlen(buffer) + 1;
-            n = write(index->player_sock, buffer, length);
-            if (n < 0) error("ERROR writing to socket");
-            index = index->next_player;
-        }
-        while (index != players);
 
         current_player = current_player->next_player;
     }
@@ -143,6 +127,7 @@ void check_game(void)
     /* Browse all players */
     do
     {
+        bzero(buffer, MAX_BUFFER);
         sprintf(buffer, "OK %d %d", index->player_number, nb_players);
         /* Length of the string + '\0' */
         length = strlen(buffer) + 1;

@@ -73,13 +73,11 @@ int main(int argc, char *argv[])
     /* Server answer */
     bzero(buffer, MAX_BUFFER);
     printf("Connecting to the server ...\n");
-    while (strcmp(buffer, "YES") != 0 && strcmp(buffer, "NO") != 0)
+    n = read(sockfd, buffer, MAX_BUFFER - 1);
+    printf("n = %d\n", n);
+    if (n < 0)
     {
-        n = read(sockfd, buffer, MAX_BUFFER - 1);
-        if (n < 0)
-        {
-            error("ERROR reading from socket");
-        }
+        error("ERROR reading from socket");
     }
     if (strcmp(buffer, "YES") == 0)
     {
@@ -94,36 +92,27 @@ int main(int argc, char *argv[])
     /* Check game starting */
     bzero(buffer, MAX_BUFFER);
     bzero(info, 3);
-    while (strcmp(info, "OK") != 0)
+    n = read(sockfd, buffer, MAX_BUFFER - 1);
+    if (n < 0)
     {
-        n = read(sockfd, buffer, MAX_BUFFER - 1);
-        if (n < 0)
-        {
-            error("ERROR reading from socket");
-        }
-        sscanf(buffer, "%s %d %d", info, &number, &nb_players);
+        error("ERROR reading from socket");
     }
+    sscanf(buffer, "%s %d %d", info, &number, &nb_players);
 
     printf("Game starting: you are player %d/%d.\n", number, nb_players);
 
     /* Game loop */
-    bzero(buffer, MAX_BUFFER);
-    bzero(info, 3);
-
     while (1)
     {
         /* Check beginning of round */
         bzero(buffer, MAX_BUFFER);
         bzero(info, 3);
-        while (strcmp(info, "RD") != 0)
+        n = read(sockfd, buffer, MAX_BUFFER - 1);
+        if (n < 0)
         {
-            n = read(sockfd, buffer, MAX_BUFFER - 1);
-            if (n < 0)
-            {
-                error("ERROR reading from socket");
-            }
-            sscanf(buffer, "%s %d %d", info, &round, &max_rounds);
+            error("ERROR reading from socket");
         }
+        sscanf(buffer, "%s %d %d", info, &round, &max_rounds);
         printf("ROUND %d/%d:\n", round, max_rounds);
 
         /* For each player */
@@ -132,36 +121,22 @@ int main(int argc, char *argv[])
             /* Check either it is this client turn or any other */
             bzero(buffer, MAX_BUFFER);
             bzero(info, 3);
-            while (strcmp(info, "WT") != 0 && strcmp(info, "GO") != 0)
+            n = read(sockfd, buffer, MAX_BUFFER - 1);
+            if (n < 0)
             {
-                n = read(sockfd, buffer, MAX_BUFFER - 1);
-                if (n < 0)
-                {
-                    error("ERROR reading from socket");
-                }
-                sscanf(buffer, "%s", info);
+                error("ERROR reading from socket");
             }
-
+            sscanf(buffer, "%s", info);
+            }
             if (strcmp(info, "WT") == 0)
             {
                 sscanf(buffer, "%s %d", info, &player);
                 printf("Player %d is playing ...\n", player);
             }
-            else
+            else if (strcmp(info, "GO") == 0)
             {
                 /* Play this round: send line to server */
                 play_round(sockfd);
-            }
-
-            /* Ending message for this player */
-            bzero(buffer, MAX_BUFFER);
-            while (strcmp(buffer, "END") != 0)
-            {
-                n = read(sockfd, buffer, MAX_BUFFER - 1);
-                if (n < 0)
-                {
-                    error("ERROR reading from socket");
-                }
             }
         }
 

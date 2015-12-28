@@ -30,15 +30,12 @@ void play_round(int sockfd)
     bzero(previous, MAX_BUFFER);
     bzero(buffer, MAX_BUFFER);
     bzero(info, 3);
-    while (strcmp(info, "FL") != 0 && strcmp(info, "LN") != 0)
+    n = read(sockfd, buffer, MAX_BUFFER - 1);
+    if (n < 0)
     {
-        n = read(sockfd, buffer, MAX_BUFFER - 1);
-        if (n < 0)
-        {
-            error("ERROR reading from socket");
-        }
-        sscanf(buffer, "%s", info);
+        error("ERROR reading from socket");
     }
+    sscanf(buffer, "%s", info);
     if (strcmp(info, "FL") == 0)
     {
         printf("First line of the game.\n");
@@ -52,6 +49,7 @@ void play_round(int sockfd)
     /* Send the new line */
     printf("write: ");
     scanf("%s", new);
+    bzero(buffer, MAX_BUFFER);
     sprintf(buffer, "LN %s", new);
     /* Length of the string + '\0' */
     length = strlen(buffer) + 1;
