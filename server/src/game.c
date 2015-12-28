@@ -111,11 +111,11 @@ void play_round(char **lines, int round)
         {
             if (current_player->player_number == 1)
             {
-                sprintf(buffer, "LN %s", lines[round - 2 + nb_players - 1]);
+                strcpy(buffer, lines[(round - 1) * nb_players - 1]);
             }
             else
             {
-                sprintf(buffer, "LN %s", lines[round - 1 + current_player->player_number - 2]);
+                strcpy(buffer, lines[(round - 1) * nb_players + current_player->player_number - 2]);
             }
         }
         /* Length of the string + '\0' */
@@ -131,8 +131,7 @@ void play_round(char **lines, int round)
         {
             error("ERROR reading from socket");
         }
-        sscanf(buffer, "%s %s", info, lines[(round - 1) * nb_players + (current_player->player_number - 1)]);
-
+        strcpy(lines[(round - 1) * nb_players + (current_player->player_number - 1)], buffer);
         /* Send end of turn message */
         index = players;
         do

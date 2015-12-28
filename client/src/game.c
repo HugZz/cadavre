@@ -42,7 +42,7 @@ void play_round(int sockfd)
     }
     else
     {
-        sscanf(buffer, "%s %s", info, previous);
+        strcpy(previous, buffer);
         printf("previous line: %s", previous);
     }
 
@@ -50,7 +50,7 @@ void play_round(int sockfd)
     printf("write: ");
     fgets(new, MAX_BUFFER - 3, stdin);
     bzero(buffer, MAX_BUFFER);
-    sprintf(buffer, "LN %s", new);
+    strcpy(buffer, new);
     /* Length of the string + '\0' */
     length = strlen(buffer) + 1;
     n = write(sockfd, buffer, length);
