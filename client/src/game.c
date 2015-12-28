@@ -43,12 +43,13 @@ void play_round(int sockfd)
     else
     {
         strcpy(previous, buffer);
-        printf("previous line: %s", previous);
     }
 
     /* Send the new line */
-    printf("write: ");
+    printf("Write what is next:\n\n");
+    printf("%s", previous);
     fgets(new, MAX_BUFFER - 3, stdin);
+    printf("\n");
     bzero(buffer, MAX_BUFFER);
     strcpy(buffer, new);
     /* Length of the string + '\0' */
@@ -62,24 +63,32 @@ void play_round(int sockfd)
 
 void print_lines(int sockfd, int nb_players, int max_rounds)
 {
-    char buffer[MAX_BUFFER];
+    char **lines = NULL;
     int n = 0;
     int i = 0;
-    int length = 0;
 
+    /* 2D array of strings with NB_ROUNDS * nb_players lines
+     * and MAX_BUFFER columns, allocated dynamicly.
+     */
+    lines = (char **) calloc(max_rounds * nb_players, sizeof(*lines));
+    *lines = (char *) calloc(max_rounds * nb_players * MAX_BUFFER, sizeof(**lines));
+    for(i = 1; i < max_rounds * nb_players; i++)
+    {
+        lines[i] = lines[i - 1] + MAX_BUFFER;
+    }
+
+    n = read(sockfd, lines, max_rounds * nb_players * MAX_BUFFER);
+    if (n < 0)
+    {
+        error("ERROR reading from socket");
+    }
+
+    /* Print the lines on server's terminal */
     for(i = 0; i < max_rounds * nb_players; i++)
     {
-        bzero(buffer, MAX_BUFFER);
-        sprintf(buffer, "GIV %2d", i);
-        length = strlen(buffer) + 1;
-        n = write(sockfd, buffer, length);
-        if (n < 0) error("ERROR writing to socket");
-        bzero(buffer, MAX_BUFFER);
-        n = read(sockfd, buffer, MAX_BUFFER);
-        if (n < 0)
-        {
-            error("ERROR reading from socket");
-        }
-        printf("%s\n", buffer);
+        printf("%s", lines[i]);
     }
+
+    free(*lines);
+    free(lines);
 }

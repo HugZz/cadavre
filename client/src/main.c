@@ -47,6 +47,8 @@ int main(int argc, char *argv[])
        exit(0);
     }
 
+    printf("\tCADAVRE GAME\n");
+
     portno = atoi(argv[2]);
     /* Create socket for the connection */
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -165,7 +167,7 @@ int main(int argc, char *argv[])
     }
 
     /* Print the final lines */
-    //print_lines(sockfd, nb_players, max_rounds);
+    print_lines(sockfd, nb_players, max_rounds);
 
     printf("End of game. Goodbye !\nMade by Hugues de Valon\n");
 

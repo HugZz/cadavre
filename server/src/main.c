@@ -48,6 +48,8 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
+    printf("\tCADAVRE SERVER\n");
+
     /* Create new file descriptor */
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
@@ -145,7 +147,7 @@ int main(int argc, char *argv[])
     }
 
     /* Announce end of game and send the cadavre, exit */
-    //send_lines(lines);
+    send_lines(lines);
 
     /* Print the lines on server's terminal */
     for(i = 0; i < NB_ROUNDS * nb_players; i++)
