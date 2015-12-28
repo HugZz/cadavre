@@ -37,6 +37,9 @@ int main(int argc, char *argv[])
     /* Array of strings to store the lines */
     char **lines = NULL;
     int i = 0;
+    /* index to close all sockets */
+    ListPlayers index = NULL;
+    ListPlayers free_index = NULL;
 
     if (argc < 2)
     {
@@ -113,6 +116,8 @@ int main(int argc, char *argv[])
         }
     }
 
+    close(sockfd);
+
     /* 2D array of strings with NB_ROUNDS * nb_players lines
      * and MAX_BUFFER columns, allocated dynamicly.
      */
@@ -141,11 +146,31 @@ int main(int argc, char *argv[])
     /* Announce end of game and send the cadavre, exit */
     //send_lines(lines);
 
-    /*Print the lines on server's terminal */
+    /* Print the lines on server's terminal */
     for(i = 0; i < NB_ROUNDS * nb_players; i++)
     {
         printf("%s", lines[i]);
     }
+
+    /* Close all sockets */
+    index = players;
+    do
+    {
+        close(index->player_sock);
+        index = index->next_player;
+    }
+    while (index != players);
+
+    index = players;
+    free_index = players;
+    /* Free allocated structures */
+    while (free_index != players_last)
+    {
+        free_index = index->next_player;
+        free(index);
+        index = free_index;
+    }
+    free(index);
 
     free(*lines);
     free(lines);
