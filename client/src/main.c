@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
             else if (strcmp(info, "GO") == 0)
             {
                 /* Play this round: send line to server */
-                printf("It's your turn to play.\n");
+                printf("\aIt's your turn to play.\n");
                 play_round(sockfd);
             }
 
